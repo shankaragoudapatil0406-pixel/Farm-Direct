@@ -1,16 +1,11 @@
-// ──────────────────────────────────────────────────────────────
-//  FarmDirect – db.js  (Supabase async data layer)
-//  Replaces the static data.js + localStorage approach.
-//  Depends on: js/supabase-config.js  (loaded first)
-// ──────────────────────────────────────────────────────────────
 
 // ── Supabase client ───────────────────────────────────────────
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_ANON);
 
-// ──────────────────────────────────────────────────────────────
+
 //  FARMERS
-// ──────────────────────────────────────────────────────────────
+
 async function getAllFarmers() {
   const { data, error } = await db.from('farmers').select('*').order('rating', { ascending: false });
   if (error) { console.error('getAllFarmers:', error); return []; }
@@ -23,9 +18,9 @@ async function getFarmer(id) {
   return data;
 }
 
-// ──────────────────────────────────────────────────────────────
+
 //  PRODUCTS
-// ──────────────────────────────────────────────────────────────
+
 async function getProducts(filters = {}) {
   let query = db.from('products').select('*, farmers(*)');
 
@@ -61,9 +56,9 @@ async function getFarmerProducts(farmerId) {
   return data;
 }
 
-// ──────────────────────────────────────────────────────────────
+
 //  REVIEWS
-// ──────────────────────────────────────────────────────────────
+
 async function getReviews(productId) {
   const { data, error } = await db
     .from('reviews')
@@ -94,9 +89,9 @@ async function submitReview({ productId, userName, rating, text }) {
   return data;
 }
 
-// ──────────────────────────────────────────────────────────────
+
 //  ORDERS
-// ──────────────────────────────────────────────────────────────
+
 async function placeOrder({ name, phone, address, slot, payment, items, total }) {
   const orderId = 'FD' + Date.now().toString().slice(-8);
 
@@ -142,9 +137,9 @@ async function getUserOrders(email) {
   return data;
 }
 
-// ──────────────────────────────────────────────────────────────
+
 //  AUTH (Supabase Auth)
-// ──────────────────────────────────────────────────────────────
+
 const Auth = {
   async signUp(email, password, meta = {}) {
     const { data, error } = await db.auth.signUp({ email, password, options: { data: meta } });
@@ -174,9 +169,9 @@ const Auth = {
   isLoggedIn() { return !!this.getUser(); },
 };
 
-// ──────────────────────────────────────────────────────────────
+
 //  CART  (still localStorage – fast, no auth required)
-// ──────────────────────────────────────────────────────────────
+
 const Cart = {
   get()      { return JSON.parse(localStorage.getItem('fd_cart') || '[]'); },
   save(items){ localStorage.setItem('fd_cart', JSON.stringify(items)); dispatchEvent(new Event('cartUpdated')); },
@@ -197,9 +192,9 @@ const Cart = {
   count()  { return this.get().reduce((s, i) => s + i.qty, 0); },
 };
 
-// ──────────────────────────────────────────────────────────────
+
 //  Helpers
-// ──────────────────────────────────────────────────────────────
+
 function renderStars(rating) {
   return [1, 2, 3, 4, 5].map(i =>
     `<span class="star ${i <= Math.floor(rating) ? 'filled' : i - 0.5 <= rating ? 'half' : ''}">★</span>`
