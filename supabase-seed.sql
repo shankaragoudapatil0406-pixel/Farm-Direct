@@ -1,7 +1,4 @@
--- ============================================================
---  FarmDirect – Seed Data
---  Run AFTER supabase-schema.sql
--- ============================================================
+
 
 -- ── Farmers ─────────────────────────────────────────────────
 INSERT INTO farmers (id, name, location, rating, reviews, since, avatar, bio, certified) VALUES
