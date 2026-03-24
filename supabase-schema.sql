@@ -1,9 +1,4 @@
--- ============================================================
---  FarmDirect – Supabase Schema
---  Run this in: Supabase Dashboard → SQL Editor → New Query
--- ============================================================
 
--- Enable UUID extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- ── Farmers ─────────────────────────────────────────────────
